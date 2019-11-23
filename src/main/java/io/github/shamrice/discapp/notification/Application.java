@@ -1,5 +1,7 @@
 package io.github.shamrice.discapp.notification;
 
+import io.github.shamrice.discapp.notification.service.ApplicationSubscriptionNotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -1,0 +1,58 @@
+
+spring.mail.properties.mail.smtp.starttls.enable: true
+
+spring:
+
+  mail:
+    host: ${EMAIL_SMTP_HOST}
+    port: ${EMAIL_SMTP_PORT}
+    username: ${NOTIFICATION_EMAIL_ADDRESS}
+    password: ${NOTIFICATION_PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 4
+      idle-timeout: 1000
+      pool-name: discapp_pool
+
+    url: jdbc:postgresql://localhost:5432/discapp
+    username: postgres
+    password: password
+    maxActive: 4
+    maxIdle: 2
+    removeAbandoned: true
+
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          lob:
+            non_contextual_creation: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: WARN
+      hibernate:
+      #SQL: DEBUG
+      #type.descriptor.sql.BasicBinder: TRACE
+    io:
+      github:
+        shamrice:
+          discapp: INFO
+
+server:
+  port: 8082
+  servlet:
+    session:
+      cookie:
+        max-age: 14d
+      timeout: 1d

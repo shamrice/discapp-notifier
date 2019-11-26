@@ -9,6 +9,7 @@ import lombok.ToString;
 @Setter
 public class EmailNotificationMessage {
 
+    private long notificationId;
     private String type;
     private String to;
     private String subject;

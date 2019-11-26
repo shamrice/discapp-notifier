@@ -38,6 +38,8 @@ public abstract class EmailNotificationService {
 
     public abstract void process();
 
+    public abstract void updateLastSendDate(long notificationId);
+
     void sendNotifications(List<EmailNotificationMessage> emailNotificationMessages) {
 
         for (EmailNotificationMessage emailNotificationMessage : emailNotificationMessages) {
@@ -57,6 +59,7 @@ public abstract class EmailNotificationService {
 
                 mailSender.send(mimeMessage);
                 log.info("Sent " + emailNotificationMessage.toString());
+                updateLastSendDate(emailNotificationMessage.getNotificationId());
 
             } catch (MessagingException mesgEx) {
                 log.error("Failed to send message: " + emailNotificationMessage.toString() + " :: " + mesgEx.getMessage(), mesgEx);

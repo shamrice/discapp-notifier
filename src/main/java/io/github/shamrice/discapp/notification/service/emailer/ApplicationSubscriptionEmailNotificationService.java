@@ -119,6 +119,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
                         message.setSubject(subjectTemplate.replace(APPLICATION_NAME_PLACEHOLDER, application.getName()));
                         message.setBody(emailBody);
                         message.setTo(subscription.getSubscriberEmail());
+                        message.setNotificationId(subscription.getId());
 
                         log.info("Adding notification message to be sent out: " + message.toString());
                         notificationMessages.add(message);
@@ -129,6 +130,16 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
         isProcessed = true;
         super.sendNotifications(notificationMessages);
+    }
+
+    @Override
+    public void updateLastSendDate(long notificationId) {
+        ApplicationSubscription subscription = applicationSubscriptionRepository.findById(notificationId).orElse(null);
+        if (subscription != null) {
+            subscription.setLastSendDt(new Date());
+            applicationSubscriptionRepository.save(subscription);
+            log.info("Updating last send date for subscription: " + subscription.toString() + " to now.");
+        }
     }
 
     private List<ApplicationSubscription> getSubscribersOfApplication(long applicationId) {

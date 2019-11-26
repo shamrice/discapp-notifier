@@ -1,4 +1,3 @@
-
 spring.mail.properties.mail.smtp.starttls.enable: true
 
 spring:
@@ -56,3 +55,16 @@ server:
       cookie:
         max-age: 14d
       timeout: 1d
+
+
+discapp:
+  service-runner:
+    sleep-duration: ${SERVICE_SLEEP_DURATION}
+  email:
+    base-url: ${BASE_URL}
+    unsubscribe-url: ${UNSUBSCRIBE_URL_TEMPLATE}
+    daily:
+      send-hour: ${DAILY_SUBSCRIPTION_SEND_HOUR}
+      type: daily_subscription
+      subject: ${DAILY_SUBSCRIPTION_SUBJECT_TEMPLATE}
+      thread-link-url: ${DAILY_SUBSCRIPTION_THREAD_LINK_TEMPLATE}

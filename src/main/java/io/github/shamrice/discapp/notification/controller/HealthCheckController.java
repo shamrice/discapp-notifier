@@ -1,9 +1,8 @@
 package io.github.shamrice.discapp.notification.controller;
 
-import io.github.shamrice.discapp.notification.service.ApplicationSubscriptionNotificationService;
+import io.github.shamrice.discapp.notification.service.emailer.ApplicationSubscriptionEmailNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HealthCheckController {
 
     @Autowired
-    private ApplicationSubscriptionNotificationService applicationSubscriptionNotificationService;
+    private ApplicationSubscriptionEmailNotificationService applicationSubscriptionNotificationService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "text/plain")
     @ResponseBody
@@ -27,7 +26,7 @@ public class HealthCheckController {
     public String getSubscriptions(@PathVariable Long id, HttpServletResponse response) {
         response.setContentType("text/plain");
         response.setCharacterEncoding("UTF-8");
-        applicationSubscriptionNotificationService.getSubscribersOfApplication(id);
+       // applicationSubscriptionNotificationService.getSubscribersOfApplication(id);
         return "See logs.";
     }
 }

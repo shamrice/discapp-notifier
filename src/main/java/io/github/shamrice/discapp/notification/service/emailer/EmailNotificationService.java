@@ -34,7 +34,7 @@ public abstract class EmailNotificationService {
     private JavaMailSender mailSender;
 
     @Autowired
-    private ConfigurationRepository configurationRepository;
+    protected ConfigurationRepository configurationRepository;
 
     public abstract void process();
 

@@ -11,4 +11,5 @@ import java.util.List;
 public interface ThreadRepository extends JpaRepository<Thread, Long> {
 
     List<Thread> getThreadByApplicationIdAndDeletedAndIsApprovedAndCreateDtBetweenOrderByCreateDtAsc(Long applicationId, Boolean deleted, Boolean isApproved, Date createDateStart, Date createDateEnd);
+    List<Thread> getThreadByApplicationIdAndDeletedAndIsApprovedAndParentIdAndCreateDtBetweenOrderByCreateDtAsc(Long applicationId, Boolean deleted, Boolean isApproved, Long parentId, Date createDateStart, Date createDateEnd);
 }

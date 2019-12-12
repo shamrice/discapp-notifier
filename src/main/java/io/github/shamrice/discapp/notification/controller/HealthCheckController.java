@@ -29,4 +29,13 @@ public class HealthCheckController {
        // applicationSubscriptionNotificationService.getSubscribersOfApplication(id);
         return "See logs.";
     }
+
+    @GetMapping("/process")
+    @ResponseBody
+    public String process(HttpServletResponse response) {
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        applicationSubscriptionNotificationService.process();
+        return "See logs";
+    }
 }

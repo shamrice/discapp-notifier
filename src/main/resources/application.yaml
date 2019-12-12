@@ -58,6 +58,7 @@ server:
 
 
 discapp:
+  manual-processing.enabled: ${MANUAL_PROCESSING_ENABLED}
   service-runner:
     sleep-duration: ${SERVICE_SLEEP_DURATION}
   email:

@@ -187,7 +187,7 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                 emailBody = emailBody.replaceAll(REPORT_FREQUENCY_URL_PLACEHOLDER, baseUrl + reportFrequencyUpdateUrl);
 
                 //total threads.
-                long totalThreads = threadRepository.countByApplicationIdAndIsApprovedAndDeleted(application.getId(), true, false);
+                long totalThreads = threadRepository.countByApplicationIdAndDeleted(application.getId(), false);
                 emailBody = emailBody.replaceAll(TOTAL_THREADS_PLACEHOLDER, String.valueOf(totalThreads));
 
                 //latest thread

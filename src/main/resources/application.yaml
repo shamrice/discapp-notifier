@@ -79,6 +79,7 @@ discapp:
       send-hour: ${ADMIN_REPORT_SEND_HOUR}
       type: admin_report
     daily:
+      enabled: ${DAIL_SUBSCRIPTION_ENABLED}
       send-hour: ${DAILY_SUBSCRIPTION_SEND_HOUR}
       type: daily_subscription
       subject: ${DAILY_SUBSCRIPTION_SUBJECT_TEMPLATE}

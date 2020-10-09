@@ -46,7 +46,7 @@ logging:
     io:
       github:
         shamrice:
-          discapp: INFO
+          discapp: {DISCAPP_NOTIFIER_DEBUG_LEVEL}
 
 server:
   port: 8082
@@ -64,6 +64,20 @@ discapp:
   email:
     base-url: ${BASE_URL}
     unsubscribe-url: ${UNSUBSCRIBE_URL_TEMPLATE}
+    report-frequency.update.url: ${REPORT_FREQUENCY_UPDATE_URL}
+    modify-account.url: ${MODIFY_ACCOUNT_URL}
+    help-forum.url: ${HELP_FORUM_URL}
+    maintenance:
+      url: ${MAINTENANCE_URL}
+      subscribers.url: ${MAINTENANCE_SUBSCRIBER_URL}
+      stats.url: ${MAINTENANCE_STATS_URL}
+      threads:
+        url: ${MAINTENANCE_THREADS_URL}
+        unapproved.url: ${MAINTENANCE_THREADS_UNAPPROVED_URL}
+    admin:
+      enabled: ${ADMIN_REPORT_ENABLED}
+      send-hour: ${ADMIN_REPORT_SEND_HOUR}
+      type: admin_report
     daily:
       send-hour: ${DAILY_SUBSCRIPTION_SEND_HOUR}
       type: daily_subscription

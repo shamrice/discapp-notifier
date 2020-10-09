@@ -24,6 +24,23 @@ public abstract class EmailNotificationService {
     protected static final String APPLICATION_ID_PLACEHOLDER = "APPLICATION_ID";
     protected static final String THREAD_ID_PLACEHOLDER = "THREAD_ID";
     protected static final String EMAIL_PLACEHOLDER = "EMAIL_ADDRESS";
+    protected static final String OWNER_EMAIL_ADDRESS_PLACEHOLDER = "OWNER_EMAIL_ADDRESS";
+    protected static final String GENERATED_AUTH_CODE_PLACEHOLDER = "GENERATED_AUTH_CODE";
+    protected static final String REPORT_FREQUENCY_URL_PLACEHOLDER = "REPORT_FREQUENCY_URL";
+    protected static final String MAINTENANCE_THREADS_UNAPPROVED_URL_PLACEHOLDER = "MAINTENANCE_THREADS_UNAPPROVED_URL";
+    protected static final String TOTAL_UNAPPROVED_MESSAGES_PLACEHOLDER = "TOTAL_UNAPPROVED_MESSAGES";
+    protected static final String MAINTENANCE_STATS_URL_PLACEHOLDER = "MAINTENANCE_STATS_URL";
+    protected static final String TOTAL_LAST_MONTH_VISITORS_PLACEHOLDER = "TOTAL_LAST_MONTH_VISITORS";
+    protected static final String MAINTENANCE_SUBSCRIBERS_URL_PLACEHOLDER = "MAINTENANCE_SUBSCRIBERS_URL";
+    protected static final String LAST_SUBSCRIPTION_DATE_PLACEHOLDER = "LAST_SUBSCRIPTION_DATE";
+    protected static final String TOTAL_SUBSCRIBERS_PLACEHOLDER = "TOTAL_SUBSCRIBERS";
+    protected static final String MAINTENANCE_THREADS_URL_PLACEHOLDER = "MAINTENANCE_THREADS_URL";
+    protected static final String LAST_THREAD_CREATION_PLACEHOLDER = "LAST_THREAD_CREATION";
+    protected static final String TOTAL_THREADS_PLACEHOLDER = "TOTAL_THREADS";
+    protected static final String MAINTENANCE_URL_PLACEHOLDER = "MAINTENANCE_URL";
+    protected static final String BASE_SITE_URL_PLACEHOLDER = "BASE_SITE_URL";
+    protected static final String HELP_FORUM_URL_PLACEHOLDER = "HELP_FORUM_URL";
+    protected static final String MODIFY_ACCOUNT_URL_PLACEHOLDER = "MODIFY_ACCOUNT_URL";
 
     private static final String TIMEZONE_CONFIG_PROP_NAME = "timezone.location";
 

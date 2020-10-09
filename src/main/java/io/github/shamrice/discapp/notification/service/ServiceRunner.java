@@ -1,5 +1,6 @@
 package io.github.shamrice.discapp.notification.service;
 
+import io.github.shamrice.discapp.notification.service.emailer.AdminReportEmailNotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,9 @@ public class ServiceRunner {
     @Autowired
     private ApplicationSubscriptionEmailNotificationService applicationSubscriptionNotificationService;
 
+    @Autowired
+    private AdminReportEmailNotificationService adminReportEmailNotificationService;
+
     public void run() {
         log.info("Service runner started. Using sleep duration of: " + sleepDuration);
 
@@ -30,6 +34,12 @@ public class ServiceRunner {
                 log.info("Send hour reached for processing of: " + applicationSubscriptionNotificationService.getClass().getSimpleName());
                 applicationSubscriptionNotificationService.process();
                 log.info("Finished processing notifications for: " + applicationSubscriptionNotificationService.getClass().getSimpleName());
+            }
+
+            if (currentHour == adminReportEmailNotificationService.getSendHour()) {
+                log.info("Send hour reached for processing of: " + adminReportEmailNotificationService.getClass().getSimpleName());
+                adminReportEmailNotificationService.process();
+                log.info("Finished processing notifications for: " + adminReportEmailNotificationService.getClass().getSimpleName());
             }
 
             try {

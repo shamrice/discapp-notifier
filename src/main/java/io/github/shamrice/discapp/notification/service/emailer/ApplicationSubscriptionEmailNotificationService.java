@@ -6,7 +6,7 @@ import io.github.shamrice.discapp.notification.repository.ApplicationRepository;
 import io.github.shamrice.discapp.notification.repository.ApplicationSubscriptionRepository;
 import io.github.shamrice.discapp.notification.repository.ThreadBodyRepository;
 import io.github.shamrice.discapp.notification.repository.ThreadRepository;
-import io.github.shamrice.discapp.notification.service.emailer.EmailNotificationService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,7 +33,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
     private String threadLinkUrlTemplate;
 
     @Value("${discapp.email.daily.send-hour}")
+    @Getter
     private int sendHour;
+
+    @Value("${discapp.email.daily.enabled}")
+    private boolean isEnabled;
 
     @Autowired
     private ApplicationSubscriptionRepository applicationSubscriptionRepository;
@@ -69,6 +73,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
     @Override
     public void process() {
+
+        if (!isEnabled) {
+            log.info("Email notification: " + emailType + " is not currently enabled. Skipping processing.");
+            return;
+        }
 
         if (isProcessed) {
             log.info("Email notification: " + emailType

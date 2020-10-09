@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 @Service
@@ -188,9 +191,27 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                 emailBody = emailBody.replaceAll(TOTAL_THREADS_PLACEHOLDER, String.valueOf(totalThreads));
 
                 //latest thread
-                Thread lastThread = threadRepository.findTopByApplicationIdAndDeletedOrderByCreateDt(application.getId(), false);
+                Thread lastThread = threadRepository.findTopByApplicationIdAndDeletedOrderByCreateDtDesc(application.getId(), false);
                 if (lastThread != null) {
-                    emailBody = emailBody.replaceAll(LAST_THREAD_CREATION_PLACEHOLDER, lastThread.getCreateDt().toString());
+                    String lastThreadStr = "";
+                    long numDaysLastThread = ChronoUnit.DAYS.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
+                    if (numDaysLastThread == 0) {
+                        long numHoursLastThread = ChronoUnit.HOURS.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
+                        if (numHoursLastThread == 0) {
+                            long numMinLastThread = ChronoUnit.MINUTES.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
+                            if (numMinLastThread == 0) {
+                                long numSecLastThread = ChronoUnit.SECONDS.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
+                                lastThreadStr = numSecLastThread + " seconds ago";
+                            } else {
+                                lastThreadStr = numMinLastThread + " minutes ago";
+                            }
+                        } else {
+                            lastThreadStr = numHoursLastThread + " hours ago";
+                        }
+                    } else {
+                        lastThreadStr = numDaysLastThread + " days ago";
+                    }
+                    emailBody = emailBody.replaceAll(LAST_THREAD_CREATION_PLACEHOLDER, lastThreadStr);
                 } else {
                     emailBody = emailBody.replaceAll(LAST_THREAD_CREATION_PLACEHOLDER, "");
                 }
@@ -214,7 +235,26 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                 //latest subscription
                 ApplicationSubscription lastSubscription = subscriptionRepository.findTopByApplicationIdAndEnabledOrderByCreateDt(application.getId(), true);
                 if (lastSubscription != null) {
-                    emailBody = emailBody.replaceAll(LAST_SUBSCRIPTION_DATE_PLACEHOLDER, lastSubscription.getCreateDt().toString());
+                    String lastSubStr = "";
+                    long numDaysLastSubscription = ChronoUnit.DAYS.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
+                    if (numDaysLastSubscription == 0) {
+                        long numHoursLastSubscription = ChronoUnit.HOURS.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
+                        if (numHoursLastSubscription == 0) {
+                            long numMinLastSubscription = ChronoUnit.MINUTES.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
+                            if (numMinLastSubscription == 0) {
+                                long numSecLastSubscription = ChronoUnit.SECONDS.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
+                                lastSubStr = numSecLastSubscription + " seconds ago";
+                            } else {
+                                lastSubStr = numMinLastSubscription + " minutes ago";
+                            }
+                        } else {
+                            lastSubStr = numHoursLastSubscription + " hours ago";
+                        }
+                    } else {
+                        lastSubStr = numDaysLastSubscription + " days ago";
+                    }
+
+                    emailBody = emailBody.replaceAll(LAST_SUBSCRIPTION_DATE_PLACEHOLDER, lastSubStr);
                 } else {
                     emailBody = emailBody.replaceAll(LAST_SUBSCRIPTION_DATE_PLACEHOLDER, "");
                 }

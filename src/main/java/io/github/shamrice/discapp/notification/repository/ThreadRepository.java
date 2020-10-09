@@ -15,5 +15,5 @@ public interface ThreadRepository extends JpaRepository<Thread, Long> {
     List<Thread> getThreadByApplicationIdAndDeletedAndIsApprovedAndParentIdAndCreateDtBetweenOrderByCreateDtAsc(Long applicationId, Boolean deleted, Boolean isApproved, Long parentId, Date createDateStart, Date createDateEnd);
 
     long countByApplicationIdAndIsApprovedAndDeleted(Long applicationId, Boolean isApproved, Boolean deleted);
-    Thread findTopByApplicationIdAndDeletedOrderByCreateDt(Long applicationId, Boolean deleted);
+    Thread findTopByApplicationIdAndDeletedOrderByCreateDtDesc(Long applicationId, Boolean deleted);
 }

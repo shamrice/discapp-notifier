@@ -46,7 +46,7 @@ logging:
     io:
       github:
         shamrice:
-          discapp: {DISCAPP_NOTIFIER_DEBUG_LEVEL}
+          discapp: ${DISCAPP_NOTIFIER_DEBUG_LEVEL}
 
 server:
   port: 8082

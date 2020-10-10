@@ -122,7 +122,6 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
             Configuration mailingListFrequencyConfig = configurationRepository.findByApplicationIdAndName(application.getId(), MAILING_LIST_SEND_FREQUENCY_CONFIG_KEY);
             if (mailingListFrequencyConfig == null || mailingListFrequencyConfig.getValue() == null) {
                 log.info("No mailing list configuration for report type: " + emailType + " for appId: " + application.getId() + " :: skipping.");
-                ;
                 continue;
             }
 
@@ -145,7 +144,7 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                 }
             } //otherwise should be daily and should sent.
 
-            Owner owner = ownerRepository.findById(application.getOwnerId()).orElse(null);
+            Owner owner = ownerRepository.findByIdAndEnabled(application.getOwnerId(), true).orElse(null);
             if (owner != null && owner.getEmail() != null) {
                 String email = owner.getEmail();
 

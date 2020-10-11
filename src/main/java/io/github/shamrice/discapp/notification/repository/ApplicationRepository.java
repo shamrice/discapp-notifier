@@ -10,4 +10,6 @@ import java.util.List;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
     List<Application> findByDeletedAndEnabled(Boolean deleted, Boolean enabled);
+
+    List<Application> findByOwnerIdAndDeletedAndEnabled(Long ownerId, Boolean deleted, Boolean enabled);
 }

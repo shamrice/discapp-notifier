@@ -14,6 +14,6 @@ public interface ApplicationSubscriptionRepository extends JpaRepository<Applica
 
     List<ApplicationSubscription> findByApplicationIdAndEnabled(Long applicationId, Boolean enabled);
 
-    ApplicationSubscription findTopByApplicationIdAndEnabledOrderByCreateDt(Long applicationId, Boolean enabled);
+    ApplicationSubscription findTopByApplicationIdAndEnabledOrderByCreateDtDesc(Long applicationId, Boolean enabled);
     long countByApplicationIdAndEnabled(Long applicationId, Boolean enabled);
 }

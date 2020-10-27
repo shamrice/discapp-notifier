@@ -245,7 +245,7 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                 }
 
                 //latest subscription
-                ApplicationSubscription lastSubscription = subscriptionRepository.findTopByApplicationIdAndEnabledOrderByCreateDt(application.getId(), true);
+                ApplicationSubscription lastSubscription = subscriptionRepository.findTopByApplicationIdAndEnabledOrderByCreateDtDesc(application.getId(), true);
                 if (lastSubscription != null) {
                     String lastSubStr = "";
                     long numDaysLastSubscription = ChronoUnit.DAYS.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());

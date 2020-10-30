@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -175,9 +177,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
+                    String urlEmail = UriUtils.encode(subscription.getSubscriberEmail(), StandardCharsets.UTF_8);
+
                     String unsubscribeLinkUrl = unsubscribeUrl
                             .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString())
-                            .replace(EMAIL_PLACEHOLDER, subscription.getSubscriberEmail());
+                            .replace(EMAIL_PLACEHOLDER, urlEmail);
 
                     String emailBody = threadEmailLinks + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
                             + "\">Click here to unsubscribe.</a></p>--------------<br><a href=\"" + baseUrl
@@ -229,9 +233,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
+                    String urlEmail = UriUtils.encode(subscription.getSubscriberEmail(), StandardCharsets.UTF_8);
+
                     String unsubscribeLinkUrl = unsubscribeUrl
                             .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString())
-                            .replace(EMAIL_PLACEHOLDER, subscription.getSubscriberEmail());
+                            .replace(EMAIL_PLACEHOLDER, urlEmail);
 
                     String emailBody = threadEmailLinks + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
                             + "\">Click here to unsubscribe.</a></p>--------------<br><a href=\"" + baseUrl
@@ -300,9 +306,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
+                    String urlEmail = UriUtils.encode(subscription.getSubscriberEmail(), StandardCharsets.UTF_8);
+
                     String unsubscribeLinkUrl = unsubscribeUrl
                             .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString())
-                            .replace(EMAIL_PLACEHOLDER, subscription.getSubscriberEmail());
+                            .replace(EMAIL_PLACEHOLDER, urlEmail);
 
                     String emailBody = threadEmailLinks + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
                             + "\">Click here to unsubscribe.</a></p>--------------<br><a href=\"" + baseUrl

@@ -108,17 +108,9 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             }
 
             switch (mailingListType) {
-                case MAILING_LIST_TYPE_ALL_MESSAGES:
-                    notificationMessages.addAll(getAllDailyMessages(application, startDate, endDate));
-                    break;
-
-                case MAILING_LIST_TYPE_FIRST_ONLY:
-                    notificationMessages.addAll(getFirstDailyMessages(application, startDate, endDate));
-                    break;
-
-                case MAILING_LIST_TYPE_FIRST_ONLY_WITH_PREVIEW:
-                    notificationMessages.addAll(getFirstDailyMessagesWithPreview(application, startDate, endDate));
-                    break;
+                case MAILING_LIST_TYPE_ALL_MESSAGES -> notificationMessages.addAll(getAllDailyMessages(application, startDate, endDate));
+                case MAILING_LIST_TYPE_FIRST_ONLY -> notificationMessages.addAll(getFirstDailyMessages(application, startDate, endDate));
+                case MAILING_LIST_TYPE_FIRST_ONLY_WITH_PREVIEW -> notificationMessages.addAll(getFirstDailyMessagesWithPreview(application, startDate, endDate));
             }
         }
 
@@ -158,8 +150,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
             if (latestThreads != null && !latestThreads.isEmpty()) {
 
-                String emailBodyStart = "<HTML><BODY><BR>";
-                String threadEmailLinks = emailBodyStart;
+                StringBuilder threadEmailLinks = new StringBuilder("<HTML><BODY><BR>");
 
                 log.info("Threads found: " + startDate + " -> " + endDate);
                 for (Thread thread : latestThreads) {
@@ -170,10 +161,14 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                     String adjustedCreateDate = getAdjustedDateStringForConfiguredTimeZone(application.getId(), thread.getCreateDt(), false);
 
-                    threadEmailLinks += "<a href=\"" + baseUrl + linkUrl + "\">" + thread.getSubject() + "</a> - "
-                            + thread.getSubmitter() + ", " + adjustedCreateDate + "<br>";
+                    String plainSubject = removeHtmlTags(thread.getSubject());
+
+                    threadEmailLinks.append("<a href=\"").append(baseUrl).append(linkUrl).append("\">")
+                            .append(plainSubject)
+                            .append("</a> - ").append(thread.getSubmitter()).append(", ").append(adjustedCreateDate)
+                            .append("<br>");
                 }
-                threadEmailLinks += "<br>";
+                threadEmailLinks.append("<br>");
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
@@ -214,8 +209,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
             if (latestThreads != null && !latestThreads.isEmpty()) {
 
-                String emailBodyStart = "<HTML><BODY><BR>";
-                String threadEmailLinks = emailBodyStart;
+                StringBuilder threadEmailLinks = new StringBuilder("<HTML><BODY><BR>");
 
                 log.info("Threads found: " + startDate + " -> " + endDate);
                 for (Thread thread : latestThreads) {
@@ -226,10 +220,13 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                     String adjustedCreateDate = getAdjustedDateStringForConfiguredTimeZone(application.getId(), thread.getCreateDt(), false);
 
-                    threadEmailLinks += "<a href=\"" + baseUrl + linkUrl + "\">" + thread.getSubject() + "</a> - "
-                            + thread.getSubmitter() + ", " + adjustedCreateDate + "<br>";
+                    String plainSubject = removeHtmlTags(thread.getSubject());
+
+                    threadEmailLinks.append("<a href=\"").append(baseUrl).append(linkUrl).append("\">")
+                            .append(plainSubject).append("</a> - ").append(thread.getSubmitter())
+                            .append(", ").append(adjustedCreateDate).append("<br>");
                 }
-                threadEmailLinks += "<br>";
+                threadEmailLinks.append("<br>");
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
@@ -270,8 +267,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
             if (latestThreads != null && !latestThreads.isEmpty()) {
 
-                String emailBodyStart = "<HTML><BODY><BR><TABLE>";
-                String threadEmailLinks = emailBodyStart;
+                StringBuilder threadEmailLinks = new StringBuilder("<HTML><BODY><BR><TABLE>");
 
                 log.info("Threads found: " + startDate + " -> " + endDate);
                 for (Thread thread : latestThreads) {
@@ -296,13 +292,17 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
                     String adjustedCreateDate = getAdjustedDateStringForConfiguredTimeZone(application.getId(), thread.getCreateDt(), false);
 
-                    threadEmailLinks += "<TR><TD style=\"background-color: #dde;\"><a href=\"" + baseUrl + linkUrl + "\">"
-                            + thread.getSubject() + "</a> - "
-                            + thread.getSubmitter() + ", " + adjustedCreateDate + "</TD></TR>"
-                            + "<TR><TD style=\"border-bottom: solid; border-width: 1px;\"><p style=\"font-size:smaller;\">"
-                            + threadBodyPreview + "</p></TD></TR>";
+                    String plainSubject = removeHtmlTags(thread.getSubject());
+                    threadBodyPreview = removeHtmlTags(threadBodyPreview);
+
+                    threadEmailLinks.append("<TR><TD style=\"background-color: #dde;\"><a href=\"").append(baseUrl)
+                            .append(linkUrl).append("\">").append(plainSubject).append("</a> - ")
+                            .append(thread.getSubmitter()).append(", ").append(adjustedCreateDate)
+                            .append("</TD></TR>")
+                            .append("<TR><TD style=\"border-bottom: solid; border-width: 1px;\"><p style=\"font-size:smaller;\">")
+                            .append(threadBodyPreview).append("</p></TD></TR>");
                 }
-                threadEmailLinks += "</TABLE><br>";
+                threadEmailLinks.append("</TABLE><br>");
 
                 for (ApplicationSubscription subscription : subscriptions) {
 
@@ -329,5 +329,11 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             }
         }
         return notificationMessages;
+    }
+
+    private String removeHtmlTags(String input) {
+        return input.replaceAll("<[^>]*>", " ")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;").trim();
     }
 }

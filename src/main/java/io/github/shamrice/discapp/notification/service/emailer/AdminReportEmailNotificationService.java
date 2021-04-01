@@ -210,15 +210,31 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                             long numMinLastThread = ChronoUnit.MINUTES.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
                             if (numMinLastThread == 0) {
                                 long numSecLastThread = ChronoUnit.SECONDS.between(lastThread.getCreateDt().toInstant(), endDate.toInstant());
-                                lastThreadStr = numSecLastThread + " seconds ago";
+                                if (numSecLastThread == 1L) {
+                                    lastThreadStr = numSecLastThread + " second ago";
+                                } else {
+                                    lastThreadStr = numSecLastThread + " seconds ago";
+                                }
                             } else {
-                                lastThreadStr = numMinLastThread + " minutes ago";
+                                if (numMinLastThread == 1L) {
+                                    lastThreadStr = numMinLastThread + " minute ago";
+                                } else {
+                                    lastThreadStr = numMinLastThread + " minutes ago";
+                                }
                             }
                         } else {
-                            lastThreadStr = numHoursLastThread + " hours ago";
+                            if (numHoursLastThread == 1L) {
+                                lastThreadStr = numHoursLastThread + " hour ago";
+                            } else {
+                                lastThreadStr = numHoursLastThread + " hours ago";
+                            }
                         }
                     } else {
-                        lastThreadStr = numDaysLastThread + " days ago";
+                        if (numDaysLastThread == 1L) {
+                            lastThreadStr = numDaysLastThread + " day ago";
+                        } else {
+                            lastThreadStr = numDaysLastThread + " days ago";
+                        }
                     }
                     currentAppReportForBody = currentAppReportForBody.replaceAll(LAST_THREAD_CREATION_PLACEHOLDER, lastThreadStr);
                 } else {
@@ -252,15 +268,31 @@ public class AdminReportEmailNotificationService extends EmailNotificationServic
                             long numMinLastSubscription = ChronoUnit.MINUTES.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
                             if (numMinLastSubscription == 0) {
                                 long numSecLastSubscription = ChronoUnit.SECONDS.between(lastSubscription.getCreateDt().toInstant(), endDate.toInstant());
-                                lastSubStr = numSecLastSubscription + " seconds ago";
+                                if (numSecLastSubscription == 1L) {
+                                    lastSubStr = numSecLastSubscription + " second ago";
+                                } else {
+                                    lastSubStr = numSecLastSubscription + " seconds ago";
+                                }
                             } else {
-                                lastSubStr = numMinLastSubscription + " minutes ago";
+                                if (numMinLastSubscription == 1L) {
+                                    lastSubStr = numMinLastSubscription + " minute ago";
+                                } else {
+                                    lastSubStr = numMinLastSubscription + " minutes ago";
+                                }
                             }
                         } else {
-                            lastSubStr = numHoursLastSubscription + " hours ago";
+                            if (numHoursLastSubscription == 1L) {
+                                lastSubStr = numHoursLastSubscription + " hour ago";
+                            } else {
+                                lastSubStr = numHoursLastSubscription + " hours ago";
+                            }
                         }
                     } else {
-                        lastSubStr = numDaysLastSubscription + " days ago";
+                        if (numDaysLastSubscription == 1L) {
+                            lastSubStr = numDaysLastSubscription + " day ago";
+                        } else {
+                            lastSubStr = numDaysLastSubscription + " days ago";
+                        }
                     }
 
                     currentAppReportForBody = currentAppReportForBody.replaceAll(LAST_SUBSCRIPTION_DATE_PLACEHOLDER, lastSubStr);

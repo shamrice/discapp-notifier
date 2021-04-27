@@ -47,6 +47,12 @@ public abstract class EmailNotificationService {
     @Value("${discapp.email.base-url}")
     protected String baseUrl;
 
+    @Value("${discapp.email.throttling.enabled}")
+    private boolean isEmailThrottlingEnabled;
+
+    @Value("${discapp.email.throttling.delay}")
+    private long emailThrottlingDelay;
+
     @Autowired
     private JavaMailSender mailSender;
 
@@ -79,7 +85,16 @@ public abstract class EmailNotificationService {
                 updateLastSendDate(emailNotificationMessage.getNotificationId());
 
             } catch (MessagingException mesgEx) {
-                log.error("Failed to send message: " + emailNotificationMessage.toString() + " :: " + mesgEx.getMessage(), mesgEx);
+                log.error("Failed to send message: " + emailNotificationMessage + " :: " + mesgEx.getMessage(), mesgEx);
+            }
+
+            if (isEmailThrottlingEnabled) {
+                try {
+                    log.info("Email throttling enabled. Sleeping thread for: " + emailThrottlingDelay);
+                    Thread.sleep(emailThrottlingDelay);
+                } catch (InterruptedException ex) {
+                    log.error("Error sleeping email send thread for throttling.", ex);
+                }
             }
 
         }

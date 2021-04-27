@@ -62,6 +62,9 @@ discapp:
   service-runner:
     sleep-duration: ${SERVICE_SLEEP_DURATION}
   email:
+    throttling:
+      enabled: ${EMAIL_THROTTLING_ENABLED}
+      delay: ${EMAIL_THROTTLING_DELAY}
     base-url: ${BASE_URL}
     unsubscribe-url: ${UNSUBSCRIBE_URL_TEMPLATE}
     report-frequency.update.url: ${REPORT_FREQUENCY_UPDATE_URL}

@@ -35,7 +35,6 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
     private String threadLinkUrlTemplate;
 
     @Value("${discapp.email.daily.send-hour}")
-    @Getter
     private int sendHour;
 
     @Value("${discapp.email.daily.enabled}")

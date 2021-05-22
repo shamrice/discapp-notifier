@@ -55,6 +55,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
     private static final String MAILING_LIST_TYPE_CONFIGURATION_KEY = "mailing.list.email.update.settings";
     private static final String MAILING_LIST_TYPE_ALL_MESSAGES = "all";
+    private static final String MAILING_LIST_TYPE_ALL_PREVIEW = "allPreview";
     private static final String MAILING_LIST_TYPE_FIRST_ONLY = "first";
     private static final String MAILING_LIST_TYPE_FIRST_ONLY_WITH_PREVIEW = "preview";
 
@@ -109,6 +110,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
             switch (mailingListType) {
                 case MAILING_LIST_TYPE_ALL_MESSAGES -> notificationMessages.addAll(getAllDailyMessages(application, startDate, endDate));
+                case MAILING_LIST_TYPE_ALL_PREVIEW -> notificationMessages.addAll(getAllDailyMessagesWithPreview(application, startDate, endDate));
                 case MAILING_LIST_TYPE_FIRST_ONLY -> notificationMessages.addAll(getFirstDailyMessages(application, startDate, endDate));
                 case MAILING_LIST_TYPE_FIRST_ONLY_WITH_PREVIEW -> notificationMessages.addAll(getFirstDailyMessagesWithPreview(application, startDate, endDate));
             }
@@ -196,6 +198,84 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
         }
         return notificationMessages;
     }
+
+    private List<EmailNotificationMessage> getAllDailyMessagesWithPreview(Application application, Date startDate, Date endDate) {
+
+        List<EmailNotificationMessage> notificationMessages = new ArrayList<>();
+
+        List<ApplicationSubscription> subscriptions = getSubscribersOfApplication(application.getId());
+        if (subscriptions != null) {
+
+            List<Thread> latestThreads = threadRepository.getThreadByApplicationIdAndDeletedAndIsApprovedAndCreateDtBetweenOrderByCreateDtAsc(
+                    application.getId(), false, true, startDate, endDate);
+
+            if (latestThreads != null && !latestThreads.isEmpty()) {
+
+
+                StringBuilder threadEmailLinks = new StringBuilder("<HTML><BODY><BR><TABLE>");
+
+                log.info("Threads found: " + startDate + " -> " + endDate);
+                for (Thread thread : latestThreads) {
+
+                    String threadBodyPreview = "";
+
+                    ThreadBody threadBody = threadBodyRepository.findByThreadId(thread.getId());
+
+                    if (threadBody != null && threadBody.getBody() != null) {
+                        //shorten body if over 240 characters.
+                        threadBodyPreview = threadBody.getBody();
+                        if (threadBodyPreview.length() > 240) { //todo : configurable length?
+                            threadBodyPreview = threadBody.getBody().substring(240);
+                            threadBodyPreview += "...";
+                        }
+                    }
+
+                    log.info(thread.toString());
+                    String linkUrl = threadLinkUrlTemplate
+                            .replace(THREAD_ID_PLACEHOLDER, thread.getId().toString())
+                            .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString());
+
+                    String adjustedCreateDate = getAdjustedDateStringForConfiguredTimeZone(application.getId(), thread.getCreateDt(), false);
+
+                    String plainSubject = removeHtmlTags(thread.getSubject());
+                    threadBodyPreview = removeHtmlTags(threadBodyPreview);
+
+                    threadEmailLinks.append("<TR><TD style=\"background-color: #dde;\"><a href=\"").append(baseUrl)
+                            .append(linkUrl).append("\">").append(plainSubject).append("</a> - ")
+                            .append(thread.getSubmitter()).append(", ").append(adjustedCreateDate)
+                            .append("</TD></TR>")
+                            .append("<TR><TD style=\"border-bottom: solid; border-width: 1px;\"><p style=\"font-size:smaller;\">")
+                            .append(threadBodyPreview).append("</p></TD></TR>");
+                }
+                threadEmailLinks.append("</TABLE><br>");
+
+                for (ApplicationSubscription subscription : subscriptions) {
+
+                    String urlEmail = UriUtils.encode(subscription.getSubscriberEmail(), StandardCharsets.UTF_8);
+
+                    String unsubscribeLinkUrl = unsubscribeUrl
+                            .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString())
+                            .replace(EMAIL_PLACEHOLDER, urlEmail);
+
+                    String emailBody = threadEmailLinks + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
+                            + "\">Click here to unsubscribe.</a></p>--------------<br><a href=\"" + baseUrl
+                            + "\"><b>Create your own free message board</b></a><br></BODY></HTML>";
+
+                    EmailNotificationMessage message = new EmailNotificationMessage();
+                    message.setType(emailType);
+                    message.setSubject(subjectTemplate.replace(APPLICATION_NAME_PLACEHOLDER, application.getName()));
+                    message.setBody(emailBody);
+                    message.setTo(subscription.getSubscriberEmail());
+                    message.setNotificationId(subscription.getId());
+
+                    log.info("Adding notification message to be sent out: " + message.toString());
+                    notificationMessages.add(message);
+                }
+            }
+        }
+        return notificationMessages;
+    }
+
 
     private List<EmailNotificationMessage> getFirstDailyMessages(Application application, Date startDate, Date endDate) {
 

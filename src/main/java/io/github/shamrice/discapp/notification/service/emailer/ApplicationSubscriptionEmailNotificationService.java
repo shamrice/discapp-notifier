@@ -293,14 +293,14 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
                     .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString())
                     .replace(EMAIL_PLACEHOLDER, urlEmail);
 
-            emailBody += "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
+            String finalEmailBody = emailBody + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
                     + "\">Click here to unsubscribe.</a></p>--------------<br><a href=\"" + baseUrl
                     + "\"><b>Create your own free message board</b></a><br></BODY></HTML>";
 
             EmailNotificationMessage message = new EmailNotificationMessage();
             message.setType(emailType);
             message.setSubject(subjectTemplate.replace(APPLICATION_NAME_PLACEHOLDER, application.getName()));
-            message.setBody(emailBody);
+            message.setBody(finalEmailBody);
             message.setTo(subscription.getSubscriberEmail());
             message.setNotificationId(subscription.getId());
 

@@ -40,6 +40,9 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
     @Value("${discapp.email.daily.enabled}")
     private boolean isEnabled;
 
+    @Value("${discapp.email.daily.preview.length.max:500}")
+    private int maxPreviewLength;
+
     @Autowired
     private ApplicationSubscriptionRepository applicationSubscriptionRepository;
 
@@ -51,8 +54,6 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    private static final int MAX_PREVIEW_LENGTH = 240;
 
     private static final String MAILING_LIST_TYPE_CONFIGURATION_KEY = "mailing.list.email.update.settings";
     private static final String MAILING_LIST_TYPE_ALL_MESSAGES = "all";
@@ -232,6 +233,9 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             threadEmailLinks.append("<a href=\"").append(baseUrl).append(linkUrl).append("\">")
                     .append(plainSubject).append("</a> - ").append(thread.getSubmitter())
                     .append(", ").append(adjustedCreateDate).append("<br>");
+
+            log.info("Adding new thread with no preview :: AppId: " + application.getId()
+                    + " : Subject: " + plainSubject + " : Submitter: " + thread.getSubmitter());
         }
         threadEmailLinks.append("<br>");
         return threadEmailLinks.toString();
@@ -247,15 +251,15 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             ThreadBody threadBody = threadBodyRepository.findByThreadId(thread.getId());
 
             if (threadBody != null && threadBody.getBody() != null) {
-                //shorten body if over 240 characters.
-                threadBodyPreview = threadBody.getBody();
-                if (threadBodyPreview.length() > MAX_PREVIEW_LENGTH) {
-                    threadBodyPreview = threadBody.getBody().substring(MAX_PREVIEW_LENGTH);
-                    threadBodyPreview += "...";
+
+                threadBodyPreview = removeHtmlTags(threadBody.getBody());
+
+                //shorten body if over max limit after html tags removed.
+                if (threadBodyPreview.length() > maxPreviewLength) {
+                    threadBodyPreview = threadBodyPreview.substring(0, maxPreviewLength) + "...";
                 }
             }
 
-            log.info(thread.toString());
             String linkUrl = threadLinkUrlTemplate
                     .replace(THREAD_ID_PLACEHOLDER, thread.getId().toString())
                     .replace(APPLICATION_ID_PLACEHOLDER, application.getId().toString());
@@ -263,7 +267,6 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             String adjustedCreateDate = getAdjustedDateStringForConfiguredTimeZone(application.getId(), thread.getCreateDt(), false);
 
             String plainSubject = removeHtmlTags(thread.getSubject());
-            threadBodyPreview = removeHtmlTags(threadBodyPreview);
 
             threadEmailLinks.append("<TR><TD style=\"background-color: #dde;\"><a href=\"").append(baseUrl)
                     .append(linkUrl).append("\">").append(plainSubject).append("</a> - ")
@@ -271,6 +274,10 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
                     .append("</TD></TR>")
                     .append("<TR><TD style=\"border-bottom: solid; border-width: 1px;\"><p style=\"font-size:smaller;\">")
                     .append(threadBodyPreview).append("</p></TD></TR>");
+
+            log.info("Adding new thread with preview ::  AppId: " + application.getId()
+                    + " : Subject: " + plainSubject + " : Submitter: " + thread.getSubmitter()
+                    + " : Body Preview: " + threadBodyPreview + " : Max preview length: " + maxPreviewLength);
         }
         threadEmailLinks.append("</TABLE><br>");
 
@@ -304,7 +311,7 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
             message.setTo(subscription.getSubscriberEmail());
             message.setNotificationId(subscription.getId());
 
-            log.info("Adding notification message to be sent out: " + message.toString());
+            log.info("Adding notification message to be sent out: " + message);
             notificationMessages.add(message);
         }
         return notificationMessages;

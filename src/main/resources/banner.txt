@@ -10,5 +10,4 @@
      By: Erik Eriksen
      Web: https://github.com/shamrice/discapp-notifier
      Version: 2.3.0
-
 *******************************************************************************

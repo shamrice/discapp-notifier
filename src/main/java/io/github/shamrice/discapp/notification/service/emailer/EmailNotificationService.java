@@ -5,7 +5,6 @@ import io.github.shamrice.discapp.notification.repository.ConfigurationRepositor
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -53,6 +52,9 @@ public abstract class EmailNotificationService {
     @Value("${discapp.email.throttling.delay}")
     private long emailThrottlingDelay;
 
+    @Value("${spring.mail.username}")
+    private String fromAddress;
+
     @Autowired
     private JavaMailSender mailSender;
 
@@ -77,11 +79,13 @@ public abstract class EmailNotificationService {
                 MimeMessage mimeMessage = mailSender.createMimeMessage();
                 MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
                 mimeMessageHelper.setTo(emailNotificationMessage.getTo());
+                mimeMessageHelper.setFrom(fromAddress);
+                mimeMessageHelper.setReplyTo(fromAddress);
                 mimeMessageHelper.setSubject(emailNotificationMessage.getSubject());
                 mimeMessageHelper.setText(emailNotificationMessage.getBody(), true);
 
                 mailSender.send(mimeMessage);
-                log.info("Sent " + emailNotificationMessage.toString());
+                log.info("Sent " + emailNotificationMessage);
                 updateLastSendDate(emailNotificationMessage.getNotificationId());
 
             } catch (MessagingException mesgEx) {

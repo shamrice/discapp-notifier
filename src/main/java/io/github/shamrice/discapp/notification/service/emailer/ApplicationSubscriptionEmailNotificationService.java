@@ -6,7 +6,6 @@ import io.github.shamrice.discapp.notification.repository.ApplicationRepository;
 import io.github.shamrice.discapp.notification.repository.ApplicationSubscriptionRepository;
 import io.github.shamrice.discapp.notification.repository.ThreadBodyRepository;
 import io.github.shamrice.discapp.notification.repository.ThreadRepository;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,8 +61,6 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
     private static final String MAILING_LIST_TYPE_FIRST_ONLY_WITH_PREVIEW = "preview";
 
     private boolean isProcessed = false;
-
-    //TODO : lots of duplicate code below for each of the types of mail messages. should be refactored to reduce duplication.
 
     public int getSendHour() {
         //reset isProcessed if not the current send hour... sort of gross but can be fixed later.

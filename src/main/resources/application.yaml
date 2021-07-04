@@ -87,3 +87,5 @@ discapp:
       type: daily_subscription
       subject: ${DAILY_SUBSCRIPTION_SUBJECT_TEMPLATE}
       thread-link-url: ${DAILY_SUBSCRIPTION_THREAD_LINK_TEMPLATE}
+      notification.text: ${DAILY_SUBSCRIPTION_NOTIFICATION_TEXT}
+

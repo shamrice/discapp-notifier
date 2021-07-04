@@ -42,6 +42,9 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
     @Value("${discapp.email.daily.preview.length.max:500}")
     private int maxPreviewLength;
 
+    @Value("${discapp.email.daily.notification.text:}")
+    private String notificationText;
+
     @Autowired
     private ApplicationSubscriptionRepository applicationSubscriptionRepository;
 
@@ -298,9 +301,13 @@ public class ApplicationSubscriptionEmailNotificationService extends EmailNotifi
                     .replace(EMAIL_PLACEHOLDER, urlEmail);
 
             String finalEmailBody = emailBody + "<p><a href=\"" + baseUrl + unsubscribeLinkUrl
-                    + "\">Click here to unsubscribe.</a></p>" +
-                    "<p><b>Please note:</b> Starting 07/01/2021, all subscription emails will be sent " +
-                    " from nediscapp@nediscapp.com instead of nediscapp@gmail.com</p>--------------<br><a href=\"" + baseUrl
+                    + "\">Click here to unsubscribe.</a></p>";
+
+            if (notificationText != null && !notificationText.isBlank()) {
+                finalEmailBody += "<p><b>Please note:</b> " + notificationText + "</p>";
+            }
+
+            finalEmailBody += "--------------<br><a href=\"" + baseUrl
                     + "\"><b>Create your own free message board</b></a><br></BODY></HTML>";
 
             EmailNotificationMessage message = new EmailNotificationMessage();
